@@ -3,7 +3,7 @@
 <h3 align="left"> Requirements </h3>
 
 * apt update
-* apt -y install net-tools git
+* apt -y install net-tools git zip
 
 <h3 align="left"> How to run a backup: </h3>
 
