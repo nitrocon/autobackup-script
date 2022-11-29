@@ -38,6 +38,12 @@ case $OS in
    *) IP="Unknown";;
 esac
 echo "$IP"
+# -------------------------------------------------------------------------
+# Shell script: autobackup-script
+# -------------------------------------------------------------------------
+# Copyright (c) 2022 nitrocon <https://pool.cryptoverse.eu>
+# This script is licensed under GNU GPL version 2.0 or above
+# -------------------------------------------------------------------------
 echo "User to backup?"
 read user
 rsync $user@$IP:/ -aAXvh \
