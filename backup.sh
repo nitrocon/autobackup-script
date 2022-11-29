@@ -1,5 +1,7 @@
 #! /bin/sh
-rsync pool@31.187.74.53:/ -aAXvh \
+echo 'PUBLIC_IP='"${PUBLIC_IP}"'
+read -e -p "User name to backup : " user
+rsync '"$user}"'@'"${PUBLIC_IP}"':/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} \
 /root/backups/
 cd /root/
