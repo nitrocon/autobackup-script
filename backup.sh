@@ -1,7 +1,9 @@
-#! /bin/sh
-echo 'PUBLIC_IP='"${PUBLIC_IP}"'
-read -e -p "User name to backup : " user
-rsync '"${user}"'@'"${PUBLIC_IP}"':/ -aAXvh \
+#!/bin/sh
+echo "IP of you're VPS"
+read IP
+echo "User to backup?"
+read user
+rsync $user@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} \
 /root/backups/
 cd /root/
