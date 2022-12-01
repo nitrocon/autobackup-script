@@ -50,6 +50,6 @@ rsync $user@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*"} \
 /root/backups/
 cd /root/
-zip -r "archive-$(date +"%Y-%m-%d-%H-%M").zip" backups
+zip -r "archive-$(date +"%Y-%m-%d-%H:%M").zip" backups
 rm -r backups
 echo -e "$GREEN Finish !!! $COL_RESET"
