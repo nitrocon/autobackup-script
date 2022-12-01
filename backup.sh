@@ -47,8 +47,9 @@ echo "$IP"
 echo "User to backup?"
 read user
 rsync $user@$IP:/ -aAXvh \
---exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} \
+--exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*"} \
 /root/backups/
 cd /root/
 zip -r backups.zip backups
+rm -r backups
 echo -e "$GREEN Finish !!! $COL_RESET"
