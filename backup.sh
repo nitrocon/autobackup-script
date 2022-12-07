@@ -55,7 +55,6 @@ echo "$IP"
 echo "Username [Home folder will be included to the Backup]"
 read user
 rsync $user@$IP:/ -aAXvh \
-    clear
     echo
     echo -e "$GREEN************************************************************************$COL_RESET"
     echo -e "$GREEN Collecting files... $COL_RESET"
