@@ -1,4 +1,12 @@
 #!/bin/sh
+    clear
+    echo
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo -e "$GREEN Reading out IP addresses $COL_RESET"
+    echo -e "$GREEN Set username for .home included to the backup $COL_RESET"
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo
+    sleep 3
 # Shell script scripts to read ip address
 # -------------------------------------------------------------------------
 # Copyright (c) 2005 nixCraft project <https://www.cyberciti.biz>
@@ -44,12 +52,33 @@ echo "$IP"
 # Copyright (c) 2022 nitrocon <https://pool.cryptoverse.eu>
 # This script is licensed under GNU GPL version 2.0 or above
 # -------------------------------------------------------------------------
-echo "User to backup?"
+echo "Username [Home folder will be included to the Backup]"
 read user
+    clear
+    echo
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo -e "$GREEN Collecting files... $COL_RESET"
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo
+    sleep 3
 rsync $user@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*"} \
 /root/backups/
 cd /root/
-zip -r "archive-$(date +"%Y-%m-%d-%H:%M").zip" backups
+    clear
+    echo
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo -e "$GREEN Zipping files... $COL_RESET"
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo
+    sleep 3
+zip -r "backup-$(date +"%Y-%m-%d").zip" backups
+    clear
+    echo
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo -e "$GREEN Removing backup folder... $COL_RESET"
+    echo -e "$GREEN************************************************************************$COL_RESET"
+    echo
+    sleep 3
 rm -r backups
-echo -e "$GREEN Finish !!! $COL_RESET"
+echo -e "$GREEN Finished !!! $COL_RESET"
