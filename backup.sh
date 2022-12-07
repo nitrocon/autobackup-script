@@ -3,7 +3,7 @@
     echo
     echo -e "$GREEN************************************************************************$COL_RESET"
     echo -e "$GREEN Reading out IP addresses $COL_RESET"
-    echo -e "$GREEN Set username for .home included to the backup $COL_RESET"
+    echo -e "$GREEN Enter password & username for .home included to the backup $COL_RESET"
     echo -e "$GREEN************************************************************************$COL_RESET"
     echo
     sleep 3
@@ -54,6 +54,7 @@ echo "$IP"
 # -------------------------------------------------------------------------
 echo "Username [Home folder will be included to the Backup]"
 read user
+rsync $user@$IP:/ -aAXvh \
     clear
     echo
     echo -e "$GREEN************************************************************************$COL_RESET"
@@ -61,7 +62,6 @@ read user
     echo -e "$GREEN************************************************************************$COL_RESET"
     echo
     sleep 3
-rsync $user@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*"} \
 /root/backups/
 cd /root/
