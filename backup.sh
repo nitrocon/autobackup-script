@@ -62,7 +62,7 @@ sleep 3
 echo "Username [Home folder will be included to the Backup]"
 read user
 rsync $user@$IP:/ -aAXvh \
---exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*"} \
+--exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"} \
 /root/backups/
 cd /root/
     clear
