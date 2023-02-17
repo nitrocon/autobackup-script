@@ -6,11 +6,25 @@
 # -------------------------------------------------------------------------
 #!/bin/sh
 
-# Define backup directory
-BACKUP_DIR="/home/pool/backups"
-
 # Clear screen
 clear
+
+# Print banner
+echo
+echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mChecking for requirements\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 3
+
+# Check if net-tools, git, and zip are installed
+PACKAGES="net-tools git zip"
+for package in $PACKAGES; do
+    if ! dpkg -s $package >/dev/null 2>&1; then
+        echo "The $package package is not installed. Installing..."
+        apt-get -y install $package
+    fi
+done
 
 # Print banner
 echo
