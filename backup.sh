@@ -89,7 +89,7 @@ BACKUP_DIR="/home/$USER/backups"
 
 # Perform backup
 rsync $USER@$IP:/ -aAXvh \
---exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"} \
+--exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/home/$USER/backups","/lost+found","/usr/bin/*","/usr/share/*"} \
 $BACKUP_DIR
 
 # Compress backup
