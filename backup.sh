@@ -6,10 +6,8 @@
 # -------------------------------------------------------------------------
 #!/bin/sh
 
-# Clear screen
 clear
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mChecking for requirements\033[0m"
@@ -26,7 +24,6 @@ for package in $PACKAGES; do
     fi
 done
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mReading out IP addresses\033[0m"
@@ -57,7 +54,6 @@ else
   done
 fi
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mEnter password & username for .home included to the backup\033[0m"
@@ -84,7 +80,6 @@ else
   done
 fi
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mGenerating SSH key\033[0m"
@@ -95,7 +90,6 @@ sleep 3
 # Generate SSH key
 ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mCopying SSH public key to VPS server\033[0m"
@@ -107,9 +101,8 @@ sleep 3
 echo "Please enter the password for the VPS server:"
 read -s PASS
 
-sshpass -p "$PASS" ssh-copy-id -p 22 "$USER@$IP"
+ssh-copy-id -p 22 -i ~/.ssh/autobackup-script.pub $USER@$IP
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mPerforming backup\033[0m"
@@ -128,7 +121,6 @@ sudo rsync -aAXv --delete -e "ssh -i /home/$USER/.ssh/autobackup-script" "/home/
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
-# Print banner
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mZipping...\033[0m"
@@ -156,5 +148,4 @@ echo "Downloading backup file to local machine..."
 mkdir -p "D:/server-backups/$IP/$USER"
 rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
 
-# Print completion message
 echo "Backup file downloaded to /mnt/d/server-backups/ on local machine."
