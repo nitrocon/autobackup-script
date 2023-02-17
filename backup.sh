@@ -117,7 +117,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "/home/$USER" "$USER@$IP:$backup_path" \
+sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" /home/$USER "$USER@$IP:$backup_path" \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
