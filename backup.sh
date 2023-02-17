@@ -64,6 +64,9 @@ select USER in $USER_LIST; do
   fi
 done
 
+# Set the backup directory to the selected user's home directory
+BACKUP_DIR="/home/$USER/backups"
+
 # Perform backup
 rsync $user@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"} \
