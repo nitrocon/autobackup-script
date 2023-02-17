@@ -103,6 +103,9 @@ read -s PASS
 # Copy SSH public key to VPS server
 sudo sshpass -p "$PASS" ssh-copy-id -p 22 -i ~/.ssh/autobackup-script.pub $USER@$IP
 
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
 echo
 echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mPerforming backup\033[0m"
@@ -111,7 +114,7 @@ echo
 sleep 3
 
 # Create backup directory if it doesn't exist
-backup_path="/backup"
+backup_path="~/backup"
 if [ ! -d "$backup_path" ]; then
     sudo mkdir -p "$backup_path"
     sudo chown $USER:$USER "$backup_path"
