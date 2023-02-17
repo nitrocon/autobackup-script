@@ -84,32 +84,22 @@ else
   done
 fi
 
-# Set the backup directory to the selected user's home directory
-BACKUP_DIR="/home/$USER/backups"
+# Create backup directory in user's home directory
+backup_path="/home/$selected_user/backup"
+mkdir -p "$backup_path"
 
-# Perform backup
-rsync $USER@$IP:/ -aAXvh \
---exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/home/$USER/backups","/lost+found","/usr/bin/*","/usr/share/*"} \
-$BACKUP_DIR
+# Backup user's home directory using rsync
+sudo rsync -aAXv --delete "/home/$selected_user/" "$backup_path"
 
-# Compress backup
-cd $BACKUP_DIR
-echo
-echo -e "\033[31m************************************************************************\033[0m"
-echo -e "\033[31mZipping files...\033[0m"
-echo -e "\033[31m************************************************************************\033[0m"
-echo
-sleep 3
-zip -r "backup-$(date +"%Y-%m-%d").zip" .
+# Create timestamp for backup file name
+timestamp=$(date +%Y-%m-%d)
 
-# Remove backup folder
-echo
-echo -e "\033[31m************************************************************************\033[0m"
-echo -e "\033[31mRemoving backup folder...\033[0m"
-echo -e "\033[31m************************************************************************\033[0m"
-echo
-sleep 3
-rm -rf $BACKUP_DIR
+# Zip backup directory
+zip_file="/home/$selected_user/${selected_user}_backup_${timestamp}.zip"
+sudo zip -r "$zip_file" "$backup_path"
+
+# Remove backup directory
+sudo rm -rf "$backup_path"
 
 # Print message and exit
-echo -e "\033[35mBackup ready to download!\033[0m"
+echo -e "\033[32mBackup ready to download!\033[0m"
