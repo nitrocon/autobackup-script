@@ -88,7 +88,7 @@ echo
 sleep 3
 
 # Generate SSH key
-sudo mkdir -p /root/.ssh && sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f /root/.ssh/autobackup-script -q -N ""
+sudo mkdir -p ~/.ssh/ && sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -99,7 +99,7 @@ sleep 3
 
 # Copy SSH public key to VPS server
 
-sudo ssh-copy-id -p 22 -i /root/.ssh/autobackup-script.pub $USER@$IP
+sudo ssh-copy-id -p 22 -i ~/.ssh/autobackup-script.pub $USER@$IP
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -113,7 +113,7 @@ backup_path="/home/$USER/backup"
 mkdir -p "$backup_path"
 
 # Backup user's home directory using rsync
-sudo rsync -aAXv --delete -e "ssh -i /root/.ssh/autobackup-script" "/home/$USER/" "$USER@$IP:/home/$USER/backup" \
+sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "/home/$USER/" "$USER@$IP:/home/$USER/backup" \
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
