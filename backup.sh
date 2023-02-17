@@ -97,11 +97,8 @@ echo -e "\033[36m***************************************************************
 echo
 sleep 3
 
-echo "Please enter the password for the VPS server:"
-read -s PASS
-
 # Copy SSH public key to VPS server
-sudo sshpass -p "$PASS" ssh-copy-id -p 22 -i ~/.ssh/autobackup-script.pub $USER@$IP
+sudo ssh-copy-id -i ~/.ssh/autobackup-script.pub $USER@$IP
 
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
