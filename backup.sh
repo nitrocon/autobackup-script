@@ -18,7 +18,7 @@ echo
 sleep 3
 
 # Check if net-tools, git, and zip are installed
-PACKAGES="net-tools git zip"
+PACKAGES="net-tools git zip sshpass"
 for package in $PACKAGES; do
     if ! dpkg -s $package >/dev/null 2>&1; then
         echo "The $package package is not installed. Installing..."
