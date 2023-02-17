@@ -85,17 +85,17 @@ else
 fi
 
 # Create backup directory in user's home directory
-backup_path="/home/$selected_user/backup"
+backup_path="/home/$USER/backup"
 mkdir -p "$backup_path"
 
 # Backup user's home directory using rsync
-sudo rsync -aAXv --delete "/home/$selected_user/" "$backup_path"
+sudo rsync -aAXv --delete "/home/$USER/" "$backup_path"
 
 # Create timestamp for backup file name
-timestamp=$(date +%Y-%m-%d)
+timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
 # Zip backup directory
-zip_file="/home/$selected_user/${selected_user}_backup_${timestamp}.zip"
+zip_file="/home/$USER/${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
