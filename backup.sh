@@ -104,12 +104,6 @@ echo
 sleep 3
 
 # Copy SSH public key to VPS server
-echo "Please enter the IP address of the VPS server:"
-read IP
-
-echo "Please enter the username for the VPS server:"
-read USER
-
 echo "Please enter the password for the VPS server:"
 read -s PASS
 
