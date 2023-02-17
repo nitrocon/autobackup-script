@@ -16,7 +16,8 @@
 
 1. listing all IPs on youre vps, autoselecting if there is just 1 IP
 2. listing all users with a homedir on youre vps, autoselects if there is just 1 User
-3. collecting all files [exceptions can be edited] (this takes some while)
-4. zipping the folder "backups" - result file shows: year, month, day
-5. deleting the folder "backups"
-6. finish, youre zip can be downloaded in your User's home folder
+3. Generates SSH Keys, so you just have to enter the password once
+4. collecting all files [exceptions can be edited] (this takes some while)
+5. zipping the folder "backups" - result file shows: year, month, day
+6. deleting the folder "backups"
+7. Automatically downloading the zip file to a default folder (D:\\server-backups...) (can be edited)
