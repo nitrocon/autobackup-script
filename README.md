@@ -14,10 +14,11 @@
 
 <h3 align="left"> What this script does: </h3>
 
-1. listing all IPs on youre vps, autoselecting if there is just 1 IP
-2. listing all users with a homedir on youre vps, autoselects if there is just 1 User
-3. Generates SSH Keys, so you just have to enter the password once
-4. collecting all files [exceptions can be edited] (this takes some while)
-5. zipping the folder "backups" - result file shows: year, month, day
-6. deleting the folder "backups"
-7. Automatically downloading the zip file to a default folder (D:\\server-backups...) (can be edited)
+1.Checks if net-tools, git, and zip are installed.
+2.Gets a list of IP addresses and prompts the user to select one to use.
+3.Gets a list of available users and prompts the user to select one to use.
+4.Generates an SSH key and copies the SSH public key to the VPS server.
+5.Creates a backup directory in the user's home directory.
+6.Performs the backup using rsync, excluding certain directories.
+7.Compresses the backup directory into a ZIP file.
+8. Downloading the zip file to your hard drive, default is (D:\server-backups..)
