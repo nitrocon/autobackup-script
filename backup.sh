@@ -88,7 +88,7 @@ echo
 sleep 3
 
 # Generate SSH key
-ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f /home/.ssh/autobackup-script -q -N ""
+sudo mkdir -p /home/.ssh && sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f /home/.ssh/autobackup-script -q -N ""
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -101,7 +101,7 @@ sleep 3
 echo "Please enter the password for the VPS server:"
 read -s PASS
 
-ssh-copy-id -p 22 -i /home/.ssh/autobackup-script.pub $USER@$IP
+sudo ssh-copy-id -p 22 -i /home/.ssh/autobackup-script.pub $USER@$IP
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
