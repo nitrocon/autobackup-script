@@ -110,11 +110,13 @@ echo -e "\033[36m***************************************************************
 echo
 sleep 3
 
-# Create backup directory in user's home directory
+# Create backup directory if it doesn't exist
 backup_path="/backup"
-mkdir -p "$backup_path"
+if [ ! -d "$backup_path" ]; then
+    sudo mkdir -p "$backup_path"
+fi
 
-# Backup user's home directory using rsync
+# Backup directory using rsync
 sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "/home/$USER" "$USER@$IP:$backup_path" \
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
