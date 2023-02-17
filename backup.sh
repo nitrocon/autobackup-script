@@ -113,7 +113,7 @@ sleep 3
 # Create backup directory if it doesn't exist
 backup_path="/backup"
 if [ ! -d "$backup_path" ]; then
-    sudo mkdir -p "$backup_path"
+    sudo mkdir -p "/$backup_path"
 fi
 
 # Backup directory using rsync
