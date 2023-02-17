@@ -115,7 +115,7 @@ backup_path="~/backup"
 mkdir -p "$backup_path"
 
 # Backup user's home directory using rsync
-sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "/home/$USER/" "$USER@$IP:/home/$USER/backup" \
+sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "~/backup" "$USER@$IP:/home/$USER/backup" \
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
