@@ -52,17 +52,23 @@ echo
 sleep 3
 
 # Get a list of all available users
-USER_LIST="$(awk -F':' '{if ($6 ~ /\/home\//) print $1}' /etc/passwd)"
+USER_LIST="$(awk -F':' '{if ($6 ~ /\/home\// && $1 != "syslog") print $1}' /etc/passwd)"
 
-# Prompt the user to select a username from the list
-select USER in $USER_LIST; do
-  if [ -n "$USER" ]; then
-    echo "Using user: $USER"
-    break
-  else
-    echo "Invalid selection. Please try again."
-  fi
-done
+# If there is only one user, use it automatically
+if [ "$(echo "$USER_LIST" | wc -l)" -eq 1 ]; then
+  USER="$(echo "$USER_LIST")"
+  echo "Using user: $USER"
+else
+  # Prompt the user to select a username from the list
+  select USER in $USER_LIST; do
+    if [ -n "$USER" ]; then
+      echo "Using user: $USER"
+      break
+    else
+      echo "Invalid selection. Please try again."
+    fi
+  done
+fi
 
 # Set the backup directory to the selected user's home directory
 BACKUP_DIR="/home/$USER/backups"
