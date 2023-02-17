@@ -114,7 +114,7 @@ sleep 3
 backup_path="/backup"
 if [ ! -d "$backup_path" ]; then
     sudo mkdir -p "$backup_path"
-    sudo chown root:root "$backup_path"
+    sudo chown $USER:$USER "$backup_path"
     sudo chmod 700 "$backup_path"
 fi
 
