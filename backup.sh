@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------
 # Shell script: autobackup-script
 # -------------------------------------------------------------------------
-# Copyright (c) 2022 nitrocon <https://pool.cryptoverse.eu>
+# Copyright (c) 2023 nitrocon <https://pool.cryptoverse.eu>
 # This script is licensed under GNU GPL version 2.0 or above
 # -------------------------------------------------------------------------
 #!/bin/sh
@@ -84,34 +84,83 @@ else
   done
 fi
 
+# Print banner
+echo
+echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mGenerating SSH key\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 3
+
+# Generate SSH key
+ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
+
+# Print banner
+echo
+echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mCopying SSH public key to VPS server\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 3
+
+# Copy SSH public key to VPS server
+echo "Please enter the IP address of the VPS server:"
+read IP
+
+echo "Please enter the username for the VPS server:"
+read USER
+
+echo "Please enter the password for the VPS server:"
+read -s PASS
+
+sshpass -p "$PASS" ssh-copy-id -p 22 "$USER@$IP"
+
+# Print banner
+echo
+echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mPerforming backup\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 3
+
 # Create backup directory in user's home directory
 backup_path="/home/$USER/backup"
 mkdir -p "$backup_path"
 
 # Backup user's home directory using rsync
-sudo rsync -aAXv --delete "/home/$USER/" "$backup_path"
+sudo rsync -aAXv --delete -e "ssh -i /home/$USER/.ssh/autobackup-script" "/home/$USER/" "$USER@$IP:/home/$USER/backup" \
+--exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
+
+# Print banner
+echo
+echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mZipping...\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 3
 
 # Zip backup directory
 zip_file="/home/$USER/${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
-# Specify the local directory to download the backup file
-local_dir="/mnt/d/server-backups"
-if [ ! -d "$local_dir" ]; then
-    echo "Creating directory: $local_dir"
-    mkdir -p "$local_dir"
-fi
-
-# Download backup file to local directory
-local_dir="D:/server-backups/$IP/$USER"
-mkdir -p "$local_dir"
-scp "root@$IP:$zip_file" "$local_dir"
-
 # Remove backup directory
 sudo rm -rf "$backup_path"
 
-# Print message and exit
-echo -e "\033[32mBackup ready to download!\033[0m"
+# Downloading the zip file
+echo
+echo -e "\033[32m************************************************************************\033[0m"
+echo -e "\033[32mDownloading the zip file\033[0m"
+echo -e "\033[32m************************************************************************\033[0m"
+echo
+sleep 3
+
+# Download backup file to local machine
+echo "Downloading backup file to local machine..."
+mkdir -p "D:/server-backups/$IP/$USER"
+rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
+
+# Print completion message
+echo "Backup file downloaded to /mnt/d/server-backups/ on local machine."
