@@ -15,7 +15,7 @@
 <h3 align="left"> What this script does: </h3>
 
 1. listing all IPs on youre vps, autoselecting if there is just 1 IP
-2. listing all users on youre vps
+2. listing all users with a homedir on youre vps, autoselects if there is just 1 User
 3. collecting all files [exceptions can be edited] (this takes some while)
 4. zipping the folder "backups" - result file shows: year, month, day
 5. deleting the folder "backups"
