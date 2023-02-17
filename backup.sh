@@ -68,7 +68,7 @@ done
 BACKUP_DIR="/home/$USER/backups"
 
 # Perform backup
-rsync $user@$IP:/ -aAXvh \
+rsync $USER@$IP:/ -aAXvh \
 --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"} \
 $BACKUP_DIR
 
