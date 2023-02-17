@@ -1,3 +1,9 @@
+# -------------------------------------------------------------------------
+# Shell script: autobackup-script
+# -------------------------------------------------------------------------
+# Copyright (c) 2022 nitrocon <https://pool.cryptoverse.eu>
+# This script is licensed under GNU GPL version 2.0 or above
+# -------------------------------------------------------------------------
 #!/bin/sh
 
 # Define backup directory
@@ -45,13 +51,18 @@ echo -e "\033[36m***************************************************************
 echo
 sleep 3
 
-# Prompt for user credentials
-echo "Username [Home folder will be included to the Backup]"
-read user
+# Get a list of all available users
+USER_LIST="$(cut -d: -f1 /etc/passwd)"
 
-# Prompt for user password
-echo "Password:"
-read -s password
+# Prompt the user to select a username from the list
+select USER in $USER_LIST; do
+  if [ -n "$USER" ]; then
+    echo "Using user: $USER"
+    break
+  else
+    echo "Invalid selection. Please try again."
+  fi
+done
 
 # Perform backup
 rsync $user@$IP:/ -aAXvh \
