@@ -118,7 +118,7 @@ fi
 
 # Backup directory using rsync
 sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" "/home/$USER" "$USER@$IP:$backup_path" \
---exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
+--exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
@@ -148,6 +148,6 @@ sleep 3
 # Download backup file to local machine
 echo "Downloading backup file to local machine..."
 mkdir -p "D:/server-backups/$IP/$USER"
-rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
+sudo rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
 
 echo "Backup file downloaded to /mnt/d/server-backups/ on local machine."
