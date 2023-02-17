@@ -52,7 +52,7 @@ echo
 sleep 3
 
 # Get a list of all available users
-USER_LIST="$(cut -d: -f1 /etc/passwd)"
+USER_LIST="$(awk -F':' '{if ($6 ~ /\/home\//) print $1}' /etc/passwd)"
 
 # Prompt the user to select a username from the list
 select USER in $USER_LIST; do
