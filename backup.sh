@@ -98,6 +98,18 @@ timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 zip_file="/home/$USER/${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
+# Specify the local directory to download the backup file
+local_dir="/mnt/d/server-backups"
+if [ ! -d "$local_dir" ]; then
+    echo "Creating directory: $local_dir"
+    mkdir -p "$local_dir"
+fi
+
+# Download backup file to local directory
+local_dir="D:/server-backups/$IP/$USER"
+mkdir -p "$local_dir"
+scp "root@$IP:$zip_file" "$local_dir"
+
 # Remove backup directory
 sudo rm -rf "$backup_path"
 
