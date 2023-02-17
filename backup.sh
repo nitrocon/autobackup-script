@@ -13,7 +13,7 @@ echo -e "\033[36m***************************************************************
 echo -e "\033[36mChecking for requirements\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
-sleep 3
+sleep 1
 
 # Check if net-tools, git, and zip are installed
 PACKAGES="net-tools git zip sshpass"
@@ -29,7 +29,7 @@ echo -e "\033[36m***************************************************************
 echo -e "\033[36mReading out IP addresses\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
-sleep 3
+sleep 1
 
 # Get a list of IP addresses
 IP_LIST="$(ifconfig | grep 'inet ' | awk '{print $2}' | grep -v '127.0.0.1')"
@@ -56,10 +56,10 @@ fi
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
-echo -e "\033[36mEnter password & username for .home included to the backup\033[0m"
+echo -e "\033[36mSelecting the User...\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
-sleep 3
+sleep 1
 
 # Get a list of all available users
 USER_LIST="$(awk -F':' '{if ($6 ~ /\/home\// && $1 != "syslog") print $1}' /etc/passwd)"
@@ -85,7 +85,7 @@ echo -e "\033[36m***************************************************************
 echo -e "\033[36mGenerating SSH key\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
-sleep 3
+sleep 1
 
 # Generate SSH key
 sudo mkdir -p ~/.ssh/ && sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
@@ -111,11 +111,11 @@ echo
 sleep 3
 
 # Create backup directory if it doesn't exist
-backup_path="~/backup"
+backup_path="/root/backup"
 if [ ! -d "$backup_path" ]; then
     sudo mkdir -p "$backup_path"
     sudo chown $USER:$USER "$backup_path"
-    sudo chmod 700 "$backup_path"
+    sudo chmod 777 "$backup_path"
 fi
 
 # Backup directory using rsync
@@ -133,7 +133,7 @@ echo
 sleep 3
 
 # Zip backup directory
-zip_file="/${USER}_backup_${timestamp}.zip"
+zip_file="~/${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
