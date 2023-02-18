@@ -152,7 +152,7 @@ echo
 sleep 3
 
 # Zip backup directory
-zip_file="/home/$USER/${USER}_backup_${timestamp}.zip"
+zip_file="/home/$USER/${IP}_${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
