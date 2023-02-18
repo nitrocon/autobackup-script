@@ -82,29 +82,6 @@ fi
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
-echo -e "\033[36mGenerating SSH key\033[0m"
-echo -e "\033[36m************************************************************************\033[0m"
-echo
-sleep 1
-
-# Generate SSH key
-sudo mkdir -p /home/$USER/.ssh/ 
-sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f /home/$USER/.ssh/autobackup-script -q -N ""
-
-echo
-echo -e "\033[36m************************************************************************\033[0m"
-echo -e "\033[36mCopying SSH public key to VPS server\033[0m"
-echo -e "\033[36m************************************************************************\033[0m"
-echo
-sleep 3
-
-# Copy SSH public key to VPS server
-sudo ssh-copy-id -i /home/$USER/.ssh/autobackup-script.pub $USER@$IP
-
-chmod 777 /home/$USER/.ssh
-
-echo
-echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mPerforming backup\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
@@ -119,7 +96,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv --delete -e "ssh -i home/$USER/.ssh/autobackup-script" /home/$USER "$USER@$IP:$backup_path" \
+sudo rsync -aAXv --delete -e 'ssh -p 22' /home/$USER "$USER@$IP:$backup_path" \
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
@@ -149,7 +126,7 @@ sleep 3
 
 # Download backup file to local machine
 echo "Downloading backup file to local machine..."
-mkdir -p "D:/server-backups/$IP/$USER"
+mkdir -p "/mnt/d/server-backups/$IP/$USER"
 sudo rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
 
-echo "Backup file downloaded to /mnt/d/server-backups/ on local machine."
+echo "Backup file downloaded to the local machine."
