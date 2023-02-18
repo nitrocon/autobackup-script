@@ -88,6 +88,14 @@ echo
 sleep 1
 
 ssh_key_file="/home/$USER/.ssh/id_rsa"
+ssh_dir="/home/$USER/.ssh"
+ssh_authorized_keys="/home/$USER/.ssh/authorized_keys"
+
+if [ ! -d "$ssh_dir" ]; then
+    mkdir "$ssh_dir"
+    chmod 700 "$ssh_dir"
+    chown "$USER:$USER" "$ssh_dir"
+fi
 
 if [ ! -f "$ssh_key_file" ]; then
     ssh-keygen -t rsa -b 4096 -f "$ssh_key_file" -N ""
@@ -97,6 +105,14 @@ else
 fi
 
 echo "Copying public key to remote server..."
+
+if [ ! -f "$ssh_authorized_keys" ]; then
+    touch "$ssh_authorized_keys"
+    chmod 600 "$ssh_authorized_keys"
+    chown "$USER:$USER" "$ssh_authorized_keys"
+fi
+
+cat "$ssh_key_file.pub" >> "$ssh_authorized_keys"
 
 ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
 
