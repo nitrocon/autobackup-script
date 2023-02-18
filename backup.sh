@@ -106,7 +106,7 @@ fi
 eval "$(ssh-agent)"
 ssh-add "$ssh_key_file"
 
-if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh"; then
+if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh/"; then
     echo "SSH key is already authorized, skipping..."
 else
     ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
