@@ -106,7 +106,7 @@ else
     echo "SSH key already exists, skipping..."
 fi
 
-if ssh -q "$USER@$IP" "exit"; then
+if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh/authorized_keys"; then
     echo "SSH key is already authorized, skipping..."
 else
     ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
@@ -116,6 +116,7 @@ else
         echo "Failed to copy public key"
     fi
 fi
+
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
