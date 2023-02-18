@@ -88,7 +88,8 @@ echo
 sleep 1
 
 # Generate SSH key
-sudo mkdir -p ~/.ssh/ && sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
+sudo mkdir -p ~/.ssh/ 
+sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -100,8 +101,7 @@ sleep 3
 # Copy SSH public key to VPS server
 sudo ssh-copy-id -i ~/.ssh/autobackup-script.pub $USER@$IP
 
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/authorized_keys
+chmod 777 ~/.ssh
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -111,7 +111,7 @@ echo
 sleep 3
 
 # Create backup directory if it doesn't exist
-backup_path="/root/backup"
+backup_path="~/backup"
 if [ ! -d "$backup_path" ]; then
     sudo mkdir -p "$backup_path"
     sudo chown $USER:$USER "$backup_path"
