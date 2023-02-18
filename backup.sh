@@ -90,6 +90,7 @@ sleep 1
 ssh_key_file="/home/$USER/.ssh/id_rsa"
 ssh_dir="/home/$USER/.ssh"
 
+eval "$(ssh-agent)"
 ssh-add "$ssh_key_file"
 
 if [ ! -d "$ssh_dir" ]; then
