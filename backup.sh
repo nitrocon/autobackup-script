@@ -90,9 +90,6 @@ sleep 1
 ssh_key_file="/home/$USER/.ssh/id_rsa"
 ssh_dir="/home/$USER/.ssh"
 
-eval "$(ssh-agent)"
-ssh-add "$ssh_key_file"
-
 if [ ! -d "$ssh_dir" ]; then
     mkdir "$ssh_dir"
     chmod 700 "$ssh_dir"
@@ -106,7 +103,10 @@ else
     echo "SSH key already exists, skipping..."
 fi
 
-if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh/authorized_keys"; then
+eval "$(ssh-agent)"
+ssh-add "$ssh_key_file"
+
+if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh"; then
     echo "SSH key is already authorized, skipping..."
 else
     ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
