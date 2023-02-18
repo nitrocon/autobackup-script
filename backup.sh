@@ -88,8 +88,8 @@ echo
 sleep 1
 
 # Generate SSH key
-sudo mkdir -p ~/.ssh/ 
-sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f ~/.ssh/autobackup-script -q -N ""
+sudo mkdir -p /home/$USER/.ssh/ 
+sudo ssh-keygen -t rsa -b 4096 -C "autobackup-script key" -f /home/$USER/.ssh/autobackup-script -q -N ""
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -99,9 +99,9 @@ echo
 sleep 3
 
 # Copy SSH public key to VPS server
-sudo ssh-copy-id -i ~/.ssh/autobackup-script.pub $USER@$IP
+sudo ssh-copy-id -i /home/$USER/.ssh/autobackup-script.pub $USER@$IP
 
-chmod 777 ~/.ssh
+chmod 777 /home/$USER/.ssh
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -111,7 +111,7 @@ echo
 sleep 3
 
 # Create backup directory if it doesn't exist
-backup_path="~/backup"
+backup_path="/home/$USER/backup"
 if [ ! -d "$backup_path" ]; then
     sudo mkdir -p "$backup_path"
     sudo chown $USER:$USER "$backup_path"
@@ -119,11 +119,11 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv --delete -e "ssh -i ~/.ssh/autobackup-script" /home/$USER "$USER@$IP:$backup_path" \
---exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
+sudo rsync -aAXv --delete -e "ssh -i home/$USER/.ssh/autobackup-script" /home/$USER "$USER@$IP:$backup_path" \
+--exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
-timestamp=$(date +%Y-%m-%d-%H-%M-%S)
+timestamp=$(date +%Y-%m-%d)
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -133,7 +133,7 @@ echo
 sleep 3
 
 # Zip backup directory
-zip_file="~/${USER}_backup_${timestamp}.zip"
+zip_file="/home/$USER/${USER}_backup_${timestamp}.zip"
 sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
