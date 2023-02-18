@@ -26,6 +26,32 @@ done
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
+echo -e "\033[36mGenerating SSH Key\033[0m"
+echo -e "\033[36m************************************************************************\033[0m"
+echo
+sleep 1
+
+ssh_key_file="/home/$USER/.ssh/id_rsa"
+
+if [ ! -f "$ssh_key_file" ]; then
+    ssh-keygen -t rsa -b 4096 -f "$ssh_key_file" -N ""
+    echo "SSH key generated at $ssh_key_file"
+else
+    echo "SSH key already exists, skipping..."
+fi
+
+echo "Copying public key to remote server..."
+
+ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
+
+if [ "$?" -eq 0 ]; then
+    echo "Public key copied"
+else
+    echo "Failed to copy public key"
+fi
+
+echo
+echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mReading out IP addresses\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
@@ -96,7 +122,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv --delete -e 'ssh -p 22' / "$USER@$IP:$backup_path" \
+sudo rsync -aAXv --delete -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path"
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
