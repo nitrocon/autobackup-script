@@ -90,6 +90,8 @@ sleep 1
 ssh_key_file="/home/$USER/.ssh/id_rsa"
 ssh_dir="/home/$USER/.ssh"
 
+ssh-add "$ssh_key_file"
+
 if [ ! -d "$ssh_dir" ]; then
     mkdir "$ssh_dir"
     chmod 700 "$ssh_dir"
@@ -113,8 +115,6 @@ else
         echo "Failed to copy public key"
     fi
 fi
-
-ssh-add "$ssh_key_file"
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
