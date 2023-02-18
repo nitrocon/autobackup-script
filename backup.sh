@@ -96,7 +96,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv --delete -e 'ssh -p 22' /home/$USER "$USER@$IP:$backup_path" \
+sudo rsync -aAXv --delete -e 'ssh -p 22' / "$USER@$IP:$backup_path" \
 --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
@@ -115,18 +115,3 @@ sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
 sudo rm -rf "$backup_path"
-
-# Downloading the zip file
-echo
-echo -e "\033[32m************************************************************************\033[0m"
-echo -e "\033[32mDownloading the zip file\033[0m"
-echo -e "\033[32m************************************************************************\033[0m"
-echo
-sleep 3
-
-# Download backup file to local machine
-echo "Downloading backup file to local machine..."
-mkdir -p "/mnt/d/server-backups/$IP/$USER"
-sudo rsync -avz --progress -e 'ssh -p 22' "$USER@$IP:$zip_file" "/mnt/d/server-backups/$IP/$USER/$(basename $zip_file)"
-
-echo "Backup file downloaded to the local machine."
