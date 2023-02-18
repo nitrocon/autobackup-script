@@ -89,7 +89,6 @@ sleep 1
 
 ssh_key_file="/home/$USER/.ssh/id_rsa"
 ssh_dir="/home/$USER/.ssh"
-ssh_authorized_keys="/home/$USER/.ssh/authorized_keys"
 
 if [ ! -d "$ssh_dir" ]; then
     mkdir "$ssh_dir"
@@ -104,22 +103,15 @@ else
     echo "SSH key already exists, skipping..."
 fi
 
-echo "Copying public key to remote server..."
-
-if [ ! -f "$ssh_authorized_keys" ]; then
-    touch "$ssh_authorized_keys"
-    chmod 600 "$ssh_authorized_keys"
-    chown "$USER:$USER" "$ssh_authorized_keys"
-fi
-
-cat "$ssh_key_file.pub" >> "$ssh_authorized_keys"
-
-ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
-
-if [ "$?" -eq 0 ]; then
-    echo "Public key copied"
+if ssh -q "$USER@$IP" "exit"; then
+    echo "SSH key is already authorized, skipping..."
 else
-    echo "Failed to copy public key"
+    ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
+    if [ "$?" -eq 0 ]; then
+        echo "Public key copied"
+    else
+        echo "Failed to copy public key"
+    fi
 fi
 
 echo
@@ -138,8 +130,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path"
---exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
+sudo rsync -aAXv -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path" --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d)
