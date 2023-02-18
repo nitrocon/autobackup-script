@@ -16,7 +16,7 @@ echo
 sleep 1
 
 # Check if net-tools, git, and zip are installed
-PACKAGES="net-tools git zip sshpass"
+PACKAGES="net-tools git zip sshpass putty-tools"
 for package in $PACKAGES; do
     if ! dpkg -s $package >/dev/null 2>&1; then
         echo "The $package package is not installed. Installing..."
@@ -88,6 +88,7 @@ echo
 sleep 1
 
 ssh_key_file="/home/$USER/.ssh/id_rsa"
+ssh_key_file_putty="/home/$USER/.ssh/id_rsa_putty.ppk"
 ssh_dir="/home/$USER/.ssh"
 
 if [ ! -d "$ssh_dir" ]; then
@@ -96,15 +97,18 @@ if [ ! -d "$ssh_dir" ]; then
     chown "$USER:$USER" "$ssh_dir"
 fi
 
-if [ ! -f "$ssh_key_file" ]; then
-    ssh-keygen -t rsa -b 4096 -f "$ssh_key_file" -N ""
-    echo "SSH key generated at $ssh_key_file"
+if [ ! -f "$ssh_key_file_putty" ]; then
+    puttygen -t rsa -b 4096 -C "$USER@$HOSTNAME" -O private -o "$ssh_key_file_putty"
+    echo "SSH key generated at $ssh_key_file_putty"
+    
+    puttygen "$ssh_key_file_putty" -O public-openssh -o "$ssh_key_file.pub"
+    echo "SSH public key generated at $ssh_key_file.pub"
 else
     echo "SSH key already exists, skipping..."
 fi
 
 eval "$(ssh-agent)"
-ssh-add "$ssh_key_file"
+ssh-add "$ssh_key_file_putty"
 
 if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh/"; then
     echo "SSH key is already authorized, skipping..."
@@ -116,6 +120,7 @@ else
         echo "Failed to copy public key"
     fi
 fi
+
 
 
 echo
