@@ -87,8 +87,8 @@ echo -e "\033[36m***************************************************************
 echo
 sleep 1
 
-ssh_key_file="/home/$USER/.ssh/id_rsa_putty.ppk"
-ssh_pub_file="/home/$USER/.ssh/id_rsa_putty.pub"
+ssh_pkk_file="/home/$USER/.ssh/id_rsa_putty.ppk"
+ssh_key_file="/home/$USER/.ssh/id_rsa_openssh.key"
 ssh_dir="/home/$USER/.ssh"
 
 if [ ! -d "$ssh_dir" ]; then
@@ -97,19 +97,17 @@ if [ ! -d "$ssh_dir" ]; then
     chown "$USER:$USER" "$ssh_dir"
 fi
 
-if [ ! -f "$ssh_key_file" ]; then
-    puttygen -t rsa -b 4096 -C "your_email@example.com" -o "$ssh_key_file"
-    echo "SSH key generated at $ssh_key_file"
+if [ ! -f "$ssh_pkk_file" ]; then
+    puttygen -t rsa -b 4096 -o "$ssh_pkk_file"
+    echo "SSH key generated at $ssh_pkk_file"
 else
     echo "SSH key already exists, skipping..."
 fi
 
 chmod 400 /home/$USER/.ssh/id_rsa_putty.ppk
+puttygen ssh_pkk_file -O private-openssh -o ssh_key_file
 
-eval "$(ssh-agent)"
-ssh-add "$ssh_key_file"
-
-if ssh -q "$USER@$IP" "grep -q $(cat $ssh_pub_file) ~/.ssh/authorized_keys"; then
+if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file) ~/.ssh/authorized_keys"; then
     echo "SSH key is already authorized, skipping..."
 else
     cat "$ssh_pub_file" | ssh "$USER@$IP" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
