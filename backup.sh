@@ -104,6 +104,8 @@ else
     echo "SSH key already exists, skipping..."
 fi
 
+chmod 400 /home/$USER/.ssh/id_rsa_putty.ppk
+
 eval "$(ssh-agent)"
 ssh-add "$ssh_key_file"
 
