@@ -87,8 +87,8 @@ echo -e "\033[36m***************************************************************
 echo
 sleep 1
 
-ssh_key_file="/home/$USER/.ssh/id_rsa"
-ssh_key_file_putty="/home/$USER/.ssh/id_rsa_putty.ppk"
+ssh_key_file="/home/$USER/.ssh/id_rsa_putty.ppk"
+ssh_pub_file="/home/$USER/.ssh/id_rsa_putty.pub"
 ssh_dir="/home/$USER/.ssh"
 
 if [ ! -d "$ssh_dir" ]; then
@@ -97,31 +97,26 @@ if [ ! -d "$ssh_dir" ]; then
     chown "$USER:$USER" "$ssh_dir"
 fi
 
-if [ ! -f "$ssh_key_file_putty" ]; then
-    puttygen -t rsa -b 4096 -C "$USER@$HOSTNAME" -O private -o "$ssh_key_file_putty"
-    echo "SSH key generated at $ssh_key_file_putty"
-    
-    puttygen "$ssh_key_file_putty" -O public-openssh -o "$ssh_key_file.pub"
-    echo "SSH public key generated at $ssh_key_file.pub"
+if [ ! -f "$ssh_key_file" ]; then
+    puttygen -t rsa -b 4096 -C "your_email@example.com" -o "$ssh_key_file"
+    echo "SSH key generated at $ssh_key_file"
 else
     echo "SSH key already exists, skipping..."
 fi
 
 eval "$(ssh-agent)"
-ssh-add "$ssh_key_file_putty"
+ssh-add "$ssh_key_file"
 
-if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file.pub) ~/.ssh/"; then
+if ssh -q "$USER@$IP" "grep -q $(cat $ssh_pub_file) ~/.ssh/authorized_keys"; then
     echo "SSH key is already authorized, skipping..."
 else
-    ssh-copy-id -i "$ssh_key_file.pub" "$USER@$IP"
+    cat "$ssh_pub_file" | ssh "$USER@$IP" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
     if [ "$?" -eq 0 ]; then
         echo "Public key copied"
     else
         echo "Failed to copy public key"
     fi
 fi
-
-
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
@@ -149,7 +144,7 @@ echo -e "\033[36m***************************************************************
 echo -e "\033[36mZipping...\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
-sleep 3
+sleep 1
 
 # Zip backup directory
 zip_file="/home/$USER/${IP}_${USER}_backup_${timestamp}.zip"
@@ -157,3 +152,10 @@ sudo zip -r "$zip_file" "$backup_path"
 
 # Remove backup directory
 sudo rm -rf "$backup_path"
+
+# Backup ready to download
+echo
+echo -e "\033[32m************************************************************************\033[0m"
+echo -e "\033[32mBackup .zip file ready to download\033[0m"
+echo -e "\033[32m************************************************************************\033[0m"
+echo
