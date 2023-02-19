@@ -93,7 +93,7 @@ ssh_dir="/home/$USER/.ssh"
 
 if [ ! -d "$ssh_dir" ]; then
     mkdir "$ssh_dir"
-    chmod 700 "$ssh_dir"
+    chmod 777 "$ssh_dir"
     chown "$USER:$USER" "$ssh_dir"
 fi
 
@@ -104,8 +104,8 @@ else
     echo "SSH key already exists, skipping..."
 fi
 
-chmod 400 /home/$USER/.ssh/id_rsa_putty.ppk
-puttygen ssh_pkk_file -O private-openssh -o ssh_key_file
+chmod 777 /home/$USER/.ssh/id_rsa_putty.ppk
+puttygen "$ssh_pkk_file" -O private-openssh -o "$ssh_key_file"
 
 if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file) ~/.ssh/authorized_keys"; then
     echo "SSH key is already authorized, skipping..."
