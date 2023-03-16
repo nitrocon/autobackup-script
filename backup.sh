@@ -134,7 +134,7 @@ if [ ! -d "$backup_path" ]; then
 fi
 
 # Backup directory using rsync
-sudo rsync -aAXv -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path" --exclude={"/home/$USER/backup","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","swapfile","/usr/bin/*","/usr/share/*"}
+sudo rsync -aAXv -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path" --exclude={"/home/$USER/backup/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","swapfile","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d)
