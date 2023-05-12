@@ -82,44 +82,6 @@ fi
 
 echo
 echo -e "\033[36m************************************************************************\033[0m"
-echo -e "\033[36mGenerating SSH Key\033[0m"
-echo -e "\033[36m************************************************************************\033[0m"
-echo
-sleep 1
-
-ssh_pkk_file="/home/$USER/.ssh/id_rsa_putty.ppk"
-ssh_key_file="/home/$USER/.ssh/id_rsa_openssh.key"
-ssh_dir="/home/$USER/.ssh"
-
-if [ ! -d "$ssh_dir" ]; then
-    mkdir "$ssh_dir"
-    chmod 777 "$ssh_dir"
-    chown "$USER:$USER" "$ssh_dir"
-fi
-
-if [ ! -f "$ssh_pkk_file" ]; then
-    puttygen -t rsa -b 4096 -o "$ssh_pkk_file"
-    echo "SSH key generated at $ssh_pkk_file"
-else
-    echo "SSH key already exists, skipping..."
-fi
-
-chmod 777 /home/$USER/.ssh/id_rsa_putty.ppk
-puttygen "$ssh_pkk_file" -O private-openssh -o "$ssh_key_file"
-
-if ssh -q "$USER@$IP" "grep -q $(cat $ssh_key_file) ~/.ssh/authorized_keys"; then
-    echo "SSH key is already authorized, skipping..."
-else
-    cat "$ssh_pub_file" | ssh "$USER@$IP" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-    if [ "$?" -eq 0 ]; then
-        echo "Public key copied"
-    else
-        echo "Failed to copy public key"
-    fi
-fi
-
-echo
-echo -e "\033[36m************************************************************************\033[0m"
 echo -e "\033[36mPerforming backup\033[0m"
 echo -e "\033[36m************************************************************************\033[0m"
 echo
@@ -133,8 +95,7 @@ if [ ! -d "$backup_path" ]; then
     sudo chmod 777 "$backup_path"
 fi
 
-# Backup directory using rsync
-sudo rsync -aAXv -e "ssh -i $ssh_key_file -p 22" / "$USER@$IP:$backup_path" --exclude={"/home/$USER/backup/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","swapfile","/usr/bin/*","/usr/share/*"}
+sudo rsync -aAXv / "$backup_path" --exclude={"/home/$USER/backup/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/sbin/*","/media/*","/lost+found","swapfile","/usr/bin/*","/usr/share/*"}
 
 # Create timestamp for backup file name
 timestamp=$(date +%Y-%m-%d)
