@@ -7,7 +7,7 @@
 
 <h3 align="left"> How to run a backup: </h3>
 
-* run as user
+* run as user in youre home directory
 * git clone https://github.com/nitrocon/autobackup-script.git
 * cd autobackup-script
 * bash backup.sh
